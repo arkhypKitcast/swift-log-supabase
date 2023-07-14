@@ -1,7 +1,7 @@
 import Foundation
 import Logging
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
   import UIKit
 #elseif os(macOS)
   import AppKit
@@ -93,7 +93,7 @@ final class SupabaseLogManager {
       NotificationCenter.default.addObserver(
         self, selector: #selector(appWillTerminate), name: NSApplication.willTerminateNotification,
         object: nil)
-    #elseif os(iOS)
+    #elseif os(iOS) || os(tvOS)
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
         // We need to use a delay with these type of notifications because they fire on app load which causes a double load of the cache from disk
         NotificationCenter.default.addObserver(
@@ -180,7 +180,7 @@ extension SupabaseLogManager {
     cache.backupCache()
   }
 
-  #if os(iOS)
+  #if os(iOS) || os(tvOS)
     @objc func didEnterForeground() {
       if config.isDebug {
         print(#function)
