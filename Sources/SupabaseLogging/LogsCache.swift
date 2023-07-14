@@ -30,7 +30,7 @@ final class LogsCache<T: Codable> {
   func backupCache() {
     queue.sync(flags: .barrier) {
       do {
-        let data = try JSONSerialization.data(withJSONObject: cachedLogs)
+        let data = try JSONEncoder().encode(cachedLogs)
         try data.write(to: LogsCache.fileURL())
         self.cachedLogs = []
       } catch {
