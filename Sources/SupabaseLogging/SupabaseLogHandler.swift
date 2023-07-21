@@ -63,7 +63,7 @@ public struct SupabaseLogHandler: LogHandler {
 
 final class SupabaseLogManager {
 
-  let cache: LogsCache<LogEntry>
+  let cache: InMemoryLogsCache<LogEntry>
   let config: SupabaseLogConfig
 
   private let minimumWaitTimeBetweenRequests: TimeInterval = 10
@@ -87,7 +87,7 @@ final class SupabaseLogManager {
 
   private init(config: SupabaseLogConfig) {
     self.config = config
-    self.cache = LogsCache(isDebug: config.isDebug)
+    self.cache = InMemoryLogsCache(isDebug: config.isDebug)
 
     #if os(macOS)
       NotificationCenter.default.addObserver(
@@ -178,6 +178,7 @@ extension SupabaseLogManager {
     }
 
     cache.backupCache()
+      checkForLogsAndSend()
   }
 
   #if os(iOS) || os(tvOS)
@@ -187,6 +188,7 @@ extension SupabaseLogManager {
       }
 
       startTimer()
+        checkForLogsAndSend()
     }
 
     @objc func didEnterBackground() {
@@ -198,6 +200,7 @@ extension SupabaseLogManager {
       sendTimer = nil
 
       cache.backupCache()
+        checkForLogsAndSend()
     }
   #endif
 }
