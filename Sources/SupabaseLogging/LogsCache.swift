@@ -72,6 +72,10 @@ final class InMemoryLogsCache<T: Codable> {
   private let queue = DispatchQueue(
     label: "co.binaryscraping.supabase-log-cache", attributes: .concurrent)
   private var cachedLogs: [T] = []
+    
+    var size: Int {
+        return cachedLogs.count
+    }
 
   func push(_ log: T) {
     queue.sync { self.cachedLogs.append(log) }

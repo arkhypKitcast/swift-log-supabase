@@ -120,6 +120,9 @@ final class SupabaseLogManager {
 
   func log(_ payload: LogEntry) {
     cache.push(payload)
+      if cache.size > 15 {
+          checkForLogsAndSend()
+      }
   }
 
   @objc
